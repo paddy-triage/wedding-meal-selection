@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Meal Selection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F9F7F1;
+            --brown-dark: #2A1C14;
+            --orange: #CE6C2A;
+            --orange-light: #E29E70;
+            --brown-medium: #3D2A1F;
+            --brown-light: #4A3628;
+            --text-light: #E8E0D8;
+            --text-muted: #A89B8F;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 300;
+            background: var(--cream);
+            color: var(--brown-dark);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header-graphic {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 40px;
+        }
+
+        .ornament {
+            color: var(--orange);
+            font-size: 28px;
+            letter-spacing: 16px;
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: clamp(2.2rem, 8vw, 3rem);
+            color: var(--brown-dark);
+            margin-bottom: 8px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: 1.1rem;
+            color: var(--orange);
+            margin-bottom: 24px;
+            letter-spacing: 2px;
+        }
+
+        .intro {
+            font-size: 0.9rem;
+            color: var(--brown-dark);
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.7;
+            opacity: 0.8;
+        }
+
+        /* Search Section */
+        .search-section {
+            margin-bottom: 24px;
+        }
+
+        .section-card {
+            background: #FFFFFF;
+            border-radius: 8px;
+            padding: 28px;
+            box-shadow: 0 2px 20px rgba(42, 28, 20, 0.08);
+            border: 1px solid rgba(42, 28, 20, 0.1);
+        }
+
+        .section-card label {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--brown-dark);
+            letter-spacing: 1px;
+        }
+
+        /* Autocomplete input */
+        .autocomplete-wrapper {
+            position: relative;
+        }
+
+        .autocomplete-input {
+            width: 100%;
+            padding: 16px 18px;
+            border: 1px solid rgba(42, 28, 20, 0.2);
+            border-radius: 6px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 1rem;
+            font-weight: 300;
+            background: #FFFFFF;
+            color: var(--brown-dark);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .autocomplete-input::placeholder {
+            color: rgba(42, 28, 20, 0.4);
+        }
+
+        .autocomplete-input:focus {
+            outline: none;
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(206, 108, 42, 0.15);
+        }
+
+        .autocomplete-input:disabled {
+            background: var(--cream);
+            color: rgba(42, 28, 20, 0.6);
+        }
+
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #FFFFFF;
+            border: 1px solid rgba(42, 28, 20, 0.15);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 8px 24px rgba(42, 28, 20, 0.15);
+        }
+
+        .autocomplete-list.show {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid rgba(42, 28, 20, 0.08);
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.highlighted {
+            background: var(--cream);
+        }
+
+        .autocomplete-item .guest-name {
+            font-weight: 400;
+            color: var(--brown-dark);
+        }
+
+        .autocomplete-item .party-info {
+            font-size: 0.8rem;
+            color: rgba(42, 28, 20, 0.6);
+            margin-top: 4px;
+        }
+
+        .autocomplete-item .match {
+            font-weight: 500;
+            color: var(--orange);
+        }
+
+        .no-results {
+            padding: 14px 18px;
+            color: rgba(42, 28, 20, 0.5);
+            font-style: italic;
+        }
+
+        /* Party confirmation */
+        .party-confirmation {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(206, 108, 42, 0.08), rgba(206, 108, 42, 0.02));
+            border-left: 3px solid var(--orange);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .party-confirmation.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .party-confirmation .party-label {
+            font-size: 0.75rem;
+            color: var(--orange);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+
+        .party-confirmation .party-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--brown-dark);
+        }
+
+        .party-confirmation .party-members {
+            font-size: 0.85rem;
+            color: rgba(42, 28, 20, 0.7);
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        .change-selection {
+            display: inline-block;
+            margin-top: 14px;
+            color: var(--orange);
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .change-selection:hover {
+            border-bottom-color: var(--orange);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Guests section */
+        .guests-section {
+            display: none;
+            margin-top: 32px;
+        }
+
+        .guests-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .guests-header {
+            margin-bottom: 24px;
+        }
+
+        .guests-header h2 {
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            font-size: 1.5rem;
+            color: var(--brown-dark);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .guest-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(42, 28, 20, 0.1);
+            border-radius: 8px;
+            padding: 28px;
+            margin-bottom: 20px;
+            position: relative;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 2px 20px rgba(42, 28, 20, 0.08);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .guest-card-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(42, 28, 20, 0.1);
+        }
+
+        .guest-name-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--orange);
+            letter-spacing: 1px;
+        }
+
+        .course-section {
+            margin-bottom: 24px;
+        }
+
+        .course-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .course-title {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgba(42, 28, 20, 0.6);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .meal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .meal-option {
+            position: relative;
+        }
+
+        .meal-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .meal-option label {
+            display: block;
+            padding: 14px 18px;
+            padding-left: 48px;
+            background: var(--cream);
+            border: 1px solid rgba(42, 28, 20, 0.1);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--brown-dark);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .meal-option label::before {
+            content: '';
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(42, 28, 20, 0.25);
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .meal-option label::after {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%) scale(0);
+            width: 8px;
+            height: 8px;
+            background: var(--orange);
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+        }
+
+        .meal-option input[type="radio"]:checked + label {
+            background: #FFFFFF;
+            border-color: var(--orange);
+        }
+
+        .meal-option input[type="radio"]:checked + label::before {
+            border-color: var(--orange);
+        }
+
+        .meal-option input[type="radio"]:checked + label::after {
+            transform: translateY(-50%) scale(1);
+        }
+
+        .meal-option label:hover {
+            border-color: var(--orange);
+            background: #FFFFFF;
+        }
+
+        /* Vegetarian label */
+        .veg-label {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.8rem;
+            color: var(--orange);
+            font-style: italic;
+        }
+
+        /* Dietary requirements */
+        .dietary-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px dashed rgba(42, 28, 20, 0.15);
+        }
+
+        .dietary-label {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgba(42, 28, 20, 0.6);
+            margin-bottom: 10px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .dietary-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid rgba(42, 28, 20, 0.15);
+            border-radius: 6px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 300;
+            background: #FFFFFF;
+            color: var(--brown-dark);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .dietary-input:focus {
+            outline: none;
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(206, 108, 42, 0.15);
+        }
+
+        .dietary-input::placeholder {
+            color: rgba(42, 28, 20, 0.4);
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .submit-btn {
+            background: var(--orange);
+            color: #FFFFFF;
+            border: 2px solid var(--orange);
+            padding: 18px 56px;
+            border-radius: 4px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--brown-dark);
+            border-color: var(--brown-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(42, 28, 20, 0.2);
+        }
+
+        .submit-btn:disabled {
+            background: rgba(42, 28, 20, 0.3);
+            border-color: rgba(42, 28, 20, 0.3);
+            color: #FFFFFF;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .success-message h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: var(--orange);
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .success-message p {
+            color: var(--brown-dark);
+            font-size: 1rem;
+            line-height: 1.8;
+            opacity: 0.8;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .form-container.hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 16px;
+            }
+
+            .section-card, .guest-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="Header_Graphic.png" alt="Laura & Patrick - Ballybeg House, Co Wicklow - 15th of May, 2026" class="header-graphic">
+            <p class="intro" id="introText">Please enter your name below to find your party and select meal choices for everyone in your group.</p>
+        </header>
+
+        <div class="form-container" id="formContainer">
+            <!-- Name Search -->
+            <div class="search-section">
+                <div class="section-card">
+                    <label for="nameInput">Find Your Name</label>
+                    <div class="autocomplete-wrapper">
+                        <input type="text" class="autocomplete-input" id="nameInput" placeholder="Start typing your name..." autocomplete="off">
+                        <div class="autocomplete-list" id="autocompleteList"></div>
+                    </div>
+
+                    <div class="party-confirmation" id="partyConfirmation">
+                        <div class="party-label">Your Party</div>
+                        <div class="party-name" id="partyNameDisplay"></div>
+                        <div class="party-members" id="partyMembersDisplay"></div>
+                        <span class="change-selection" onclick="resetSelection()">Not you? Search again</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guests Section -->
+            <div class="guests-section" id="guestsSection">
+                <div class="guests-header">
+                    <h2>Meal Selections</h2>
+                </div>
+
+                <div id="guestsList"></div>
+
+                <div class="submit-section">
+                    <button type="button" class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Selections</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <h2>Thank You</h2>
+            <p>Your meal selections have been received.<br>We look forward to celebrating with you at Ballybeg House.</p>
+        </div>
+
+        <footer>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        let GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzu8DQLixQvgZZJcSaKWYLn6pFT9QGQL1E53mdk5DiBsNTSlfZPs0bjet7IfWild5Y/exec';
+
+        // Complete guest list - maps each guest to their party
+        const guestToParty = {
+            "Laura Higgins": "Laura Higgins & Patrick Farrell",
+            "Patrick Farrell": "Laura Higgins & Patrick Farrell",
+            "Annemarie Higgins": "Annemarie & Godfrey Higgins",
+            "Godfrey Higgins": "Annemarie & Godfrey Higgins",
+            "Mairead Ardill": "Mairead & Audrey Ardill",
+            "Audrey Ardill": "Mairead & Audrey Ardill",
+            "Ray Ardill": "Ray Ardill & Amy O'Regan",
+            "Amy O'Regan": "Ray Ardill & Amy O'Regan",
+            "Eithne Early": "Eithne & Derek Early",
+            "Derek Early": "Eithne & Derek Early",
+            "Jenna Early": "Jenna Early and Guest",
+            "John Arteaga": "Jenna Early and Guest",
+            "Eoghan Fagan": "Eoghan Fagan",
+            "Paul Early": "Paul & Linda Zingali Early",
+            "Linda Zingali Early": "Paul & Linda Zingali Early",
+            "Sarah Browne": "Sarah & Johnathan Browne",
+            "Johnathan Browne": "Sarah & Johnathan Browne",
+            "Deirdre Stedman": "The Stedmans",
+            "Eithne Stedman": "The Stedmans",
+            "Jess Norton": "Jess Norton & Eoin Tracey",
+            "Eoin Tracey": "Jess Norton & Eoin Tracey",
+            "Ruth Kelleher": "Ruth Kelleher",
+            "Fiona Maginess": "Fiona Maginess",
+            "Megan Redmond": "Megan Redmond",
+            "Kate Griffin": "Kate Griffin & Tom McCrum",
+            "Tom McCrum": "Kate Griffin & Tom McCrum",
+            "Carrie Buckley": "Carrie & Cian Buckley",
+            "Cian Buckley": "Carrie & Cian Buckley",
+            "Jason Wong": "Jason Wong",
+            "Sam Ryan": "Sam Ryan",
+            "Philip Neary": "Philip Neary",
+            "Sebastian Tozer": "Sebastian Tozer",
+            "Rebecca Meagher": "Rebecca Meagher & Alec Young",
+            "Alec Young": "Rebecca Meagher & Alec Young",
+            "Mary Drumgoole": "Mary Drumgoole & Billy Meagher",
+            "Billy Meagher": "Mary Drumgoole & Billy Meagher",
+            "Rosie Kennedy": "Rosie Kennedy",
+            "Gráinne O'Hanlon": "Gráinne & John O'Hanlon",
+            "John O'Hanlon": "Gráinne & John O'Hanlon",
+            "Chloe Farrell": "Chloe & Seán Farrell",
+            "Seán Farrell": "Chloe & Seán Farrell",
+            "Gary McGowan": "Gary McGowan",
+            "Mike Delaney": "Mike Delaney",
+            "Dean McAloon": "Dean McAloon & Nathalia Alvarez",
+            "Nathalia Alvarez": "Dean McAloon & Nathalia Alvarez",
+            "Brian O'hAonghusa": "Brian O'hAonghusa & Fiona Dwyer",
+            "Fiona Dwyer": "Brian O'hAonghusa & Fiona Dwyer",
+            "Luke McDonald": "Luke McDonald",
+            "Julie Farrell": "The Farrell Family",
+            "Hughie McGearty": "The Farrell Family",
+            "Emma Farrell": "The Farrell Family",
+            "Rebecca Farrell": "The Farrell Family",
+            "Sarah Farrell": "The Farrell Family",
+            "Dylan Farrell": "The Farrell Family",
+            "Ronan Gahan": "The Farrell Family",
+            "Pete Moloney": "Pete Moloney & Hannah Thornton",
+            "Hannah Thornton": "Pete Moloney & Hannah Thornton",
+            "Robert Farrell": "Robert & Cáit Farrell",
+            "Cáit Farrell": "Robert & Cáit Farrell",
+            "Domhnall MacBrádaigh": "The MacBrádaighs",
+            "Liz MacBrádaigh": "The MacBrádaighs",
+            "Eoin MacBrádaigh": "The MacBrádaighs",
+            "Aoife NicBhrádaigh": "The MacBrádaighs",
+            "Aisling NicBhrádaigh": "Aisling, Tom, Niamh & Sinéad",
+            "Tom Ó Cochláin": "Aisling, Tom, Niamh & Sinéad",
+            "Niamh NíChochláin": "Aisling, Tom, Niamh & Sinéad",
+            "Sinéad NíChochláin": "Aisling, Tom, Niamh & Sinéad",
+            "Cathal Browne": "The Brownes",
+            "Caoimhe Browne": "The Brownes",
+            "Diarmuid Browne": "The Brownes",
+            "Gráinne Quinn": "The Quinns",
+            "Richard Quinn": "The Quinns",
+            "Fiona Quinn": "The Quinns",
+            "Nuala Keane": "Nuala Keane & Thomas Anderson",
+            "Thomas Anderson": "Nuala Keane & Thomas Anderson",
+            "Aimee Malone": "Aimee & Shane Malone",
+            "Shane Malone": "Aimee & Shane Malone",
+            "Paul Farrell": "Paul & Eileen Farrell",
+            "Eileen Farrell": "Paul & Eileen Farrell",
+            "Stephen Farrell": "Stephen & Irene Farrell",
+            "Irene Farrell": "Stephen & Irene Farrell",
+            "Mary Corcoran": "Mary Corcoran & Peter O'Connor",
+            "Peter O'Connor": "Mary Corcoran & Peter O'Connor",
+            "Caoimhe Williams": "Caoimhe Williams & Dan Horan",
+            "Dan Horan": "Caoimhe Williams & Dan Horan",
+            "Sallyanne Clarke": "Sallyanne & Derry Clarke",
+            "Derry Clarke": "Sallyanne & Derry Clarke",
+            "Hazel Higgins": "Hazel & Dick Higgins",
+            "Dick Higgins": "Hazel & Dick Higgins",
+            "Jenna Healy": "Jenna & Tom Healy",
+            "Tom Healy": "Jenna & Tom Healy",
+            "Damhnait NicBhrádaigh": "Damhnait NicBhrádaigh, Paddy Farrell & Maura MacBrádaigh",
+            "Paddy Farrell": "Damhnait NicBhrádaigh, Paddy Farrell & Maura MacBrádaigh",
+            "Maura MacBrádaigh": "Damhnait NicBhrádaigh, Paddy Farrell & Maura MacBrádaigh",
+            "Brian Farrell": "Dermot and Brian Farrell",
+            "Dermot Farrell": "Dermot and Brian Farrell",
+            "Connor Farrell": "Connor Farrell & Eve O'Reilly",
+            "Eve O'Reilly": "Connor Farrell & Eve O'Reilly",
+            "Stephen Ardill": "Stephen Ardill",
+            "Niamh Higgins": "Niamh Higgins & Malcolm Rowe",
+            "Malcolm Rowe": "Niamh Higgins & Malcolm Rowe",
+            "Catherine Carroll": "Catherine Carroll & Joe McDonagh",
+            "Joe McDonagh": "Catherine Carroll & Joe McDonagh",
+            "Frankie Pullan": "Frankie Pullan",
+            "Tea Meneghetti": "Tea Meneghetti & Alex Teckkam",
+            "Alex Teckkam": "Tea Meneghetti & Alex Teckkam",
+            "Joan Love": "Joan & Robbie Love",
+            "Robbie Love": "Joan & Robbie Love"
+        };
+
+        // Party to members mapping (built from guestToParty)
+        const partyToGuests = {};
+        for (const [guest, party] of Object.entries(guestToParty)) {
+            if (!partyToGuests[party]) {
+                partyToGuests[party] = [];
+            }
+            partyToGuests[party].push(guest);
+        }
+
+        // All guest names for search
+        const allGuests = Object.keys(guestToParty);
+
+        // Meal options
+        const mealOptions = {
+            starter: [
+                { id: 'starter-colcannon', name: 'Colcannon potato cake, buttered kale and leeks, smoked bacon velouté' },
+                { id: 'starter-vegetarian', name: 'Heritage tomato, burrata, basil', vegetarianLabel: true }
+            ],
+            main: [
+                { id: 'main-chicken', name: 'Pan fried chicken breast, carrot purée, sausage meat stuffing, creamed mash, chicken jus' },
+                { id: 'main-salmon', name: 'Sweet chilli salmon, asian style rice noodles, coriander, and lime' },
+                { id: 'main-vegetarian', name: 'Butternut squash, spinach and wild mushroom pithivier, herb and hazelnut pesto', vegetarianLabel: true }
+            ]
+        };
+
+        let selectedPartyName = null;
+        let selectedGuests = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupAutocomplete();
+        });
+
+        function setupAutocomplete() {
+            const input = document.getElementById('nameInput');
+            const list = document.getElementById('autocompleteList');
+            let highlightedIndex = -1;
+
+            input.addEventListener('input', function() {
+                const value = this.value.toLowerCase().trim();
+                list.innerHTML = '';
+                highlightedIndex = -1;
+
+                if (value.length < 1) {
+                    list.classList.remove('show');
+                    return;
+                }
+
+                const matches = allGuests.filter(name => 
+                    name.toLowerCase().includes(value)
+                );
+
+                if (matches.length === 0) {
+                    list.innerHTML = '<div class="no-results">No matching guests found. Please check the spelling of your name.</div>';
+                    list.classList.add('show');
+                    return;
+                }
+
+                matches.forEach((name, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    
+                    const partyName = guestToParty[name];
+                    const partyMembers = partyToGuests[partyName];
+                    const isSolo = partyMembers.length === 1;
+                    
+                    // Highlight matching text
+                    const lowerName = name.toLowerCase();
+                    const matchIndex = lowerName.indexOf(value);
+                    const before = name.substring(0, matchIndex);
+                    const match = name.substring(matchIndex, matchIndex + value.length);
+                    const after = name.substring(matchIndex + value.length);
+                    
+                    item.innerHTML = `
+                        <div class="guest-name">${before}<span class="match">${match}</span>${after}</div>
+                        <div class="party-info">${partyName}</div>
+                    `;
+                    
+                    item.addEventListener('click', () => selectGuest(name));
+                    list.appendChild(item);
+                });
+
+                list.classList.add('show');
+            });
+
+            // Keyboard navigation
+            input.addEventListener('keydown', function(e) {
+                const items = list.querySelectorAll('.autocomplete-item');
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    highlightedIndex = Math.min(highlightedIndex + 1, items.length - 1);
+                    updateHighlight(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    highlightedIndex = Math.max(highlightedIndex - 1, 0);
+                    updateHighlight(items);
+                } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+                    e.preventDefault();
+                    const matches = allGuests.filter(name => 
+                        name.toLowerCase().includes(input.value.toLowerCase().trim())
+                    );
+                    if (matches[highlightedIndex]) selectGuest(matches[highlightedIndex]);
+                }
+            });
+
+            function updateHighlight(items) {
+                items.forEach((item, index) => {
+                    item.classList.toggle('highlighted', index === highlightedIndex);
+                });
+                if (items[highlightedIndex]) {
+                    items[highlightedIndex].scrollIntoView({ block: 'nearest' });
+                }
+            }
+
+            // Close on outside click
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.autocomplete-wrapper')) {
+                    list.classList.remove('show');
+                }
+            });
+        }
+
+        function selectGuest(guestName) {
+            const input = document.getElementById('nameInput');
+            const list = document.getElementById('autocompleteList');
+            
+            input.value = guestName;
+            input.disabled = true;
+            list.classList.remove('show');
+            
+            // Get party info
+            selectedPartyName = guestToParty[guestName];
+            selectedGuests = partyToGuests[selectedPartyName];
+            
+            // Show party confirmation
+            const confirmation = document.getElementById('partyConfirmation');
+            const isSolo = selectedGuests.length === 1;
+            
+            document.getElementById('partyNameDisplay').textContent = selectedPartyName;
+            document.getElementById('partyMembersDisplay').textContent = isSolo 
+                ? '' 
+                : `${selectedGuests.length} guests: ${selectedGuests.join(', ')}`;
+            
+            confirmation.classList.add('show');
+            
+            // Show guest cards
+            showGuestCards();
+        }
+
+        function showGuestCards() {
+            const guestsList = document.getElementById('guestsList');
+            guestsList.innerHTML = '';
+
+            selectedGuests.forEach((guestName, index) => {
+                const guestCard = createGuestCard(guestName, index);
+                guestsList.appendChild(guestCard);
+            });
+
+            document.getElementById('guestsSection').classList.add('active');
+            
+            // Scroll to guests section
+            setTimeout(() => {
+                document.getElementById('guestsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        function createGuestCard(guestName, index) {
+            const card = document.createElement('div');
+            card.className = 'guest-card';
+            card.dataset.guestName = guestName;
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.innerHTML = `
+                <div class="guest-card-header">
+                    <span class="guest-name-title">${guestName}</span>
+                </div>
+                
+                <div class="course-section">
+                    <div class="course-title">Starter</div>
+                    <div class="meal-options">
+                        ${mealOptions.starter.map((option, i) => `
+                            <div class="meal-option">
+                                <input type="radio" name="starter-${index}" id="${option.id}-${index}" value="${option.name}" required>
+                                <label for="${option.id}-${index}">${option.name}${option.vegetarianLabel ? '<span class="veg-label">Vegetarian Option (Vegan on Request)</span>' : ''}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="course-section">
+                    <div class="course-title">Main Course</div>
+                    <div class="meal-options">
+                        ${mealOptions.main.map((option, i) => `
+                            <div class="meal-option">
+                                <input type="radio" name="main-${index}" id="${option.id}-${index}" value="${option.name}" required>
+                                <label for="${option.id}-${index}">${option.name}${option.vegetarianLabel ? '<span class="veg-label">Vegetarian Option (Vegan on Request)</span>' : ''}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="dietary-section">
+                    <label class="dietary-label">Dietary Requirements / Allergies</label>
+                    <textarea class="dietary-input" placeholder="Please list any dietary requirements or allergies (leave blank if none)" data-guest="${index}"></textarea>
+                </div>
+            `;
+            return card;
+        }
+
+        function resetSelection() {
+            selectedPartyName = null;
+            selectedGuests = [];
+
+            const input = document.getElementById('nameInput');
+            input.value = '';
+            input.disabled = false;
+            input.focus();
+
+            document.getElementById('partyConfirmation').classList.remove('show');
+            document.getElementById('guestsSection').classList.remove('active');
+            document.getElementById('guestsList').innerHTML = '';
+        }
+
+        function validateForm() {
+            if (!selectedPartyName || selectedGuests.length === 0) {
+                alert('Please find your name and select your party first.');
+                return false;
+            }
+
+            const guestCards = document.querySelectorAll('.guest-card');
+            
+            for (let i = 0; i < guestCards.length; i++) {
+                const card = guestCards[i];
+                const guestName = card.dataset.guestName;
+                
+                const starter = card.querySelector(`input[name="starter-${i}"]:checked`);
+                const main = card.querySelector(`input[name="main-${i}"]:checked`);
+
+                if (!starter || !main) {
+                    alert(`Please select a starter and main course for ${guestName}.`);
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function collectFormData() {
+            const guests = [];
+            const guestCards = document.querySelectorAll('.guest-card');
+
+            guestCards.forEach((card, index) => {
+                const guestName = card.dataset.guestName;
+                const dietary = card.querySelector(`.dietary-input[data-guest="${index}"]`).value.trim();
+                
+                guests.push({
+                    name: guestName,
+                    starter: card.querySelector(`input[name="starter-${index}"]:checked`).value,
+                    main: card.querySelector(`input[name="main-${index}"]:checked`).value,
+                    dietary: dietary || 'None'
+                });
+            });
+
+            return { 
+                partyName: selectedPartyName, 
+                guests, 
+                timestamp: new Date().toISOString() 
+            };
+        }
+
+        async function submitForm() {
+            if (!validateForm()) return;
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            const formData = collectFormData();
+
+            if (!GOOGLE_SCRIPT_URL) {
+                console.log('Form data (no URL configured):', formData);
+                alert('Note: No Google Sheets URL configured. Check the browser console to see the data.');
+                showSuccess();
+                return;
+            }
+
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                showSuccess();
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                alert('There was an error submitting your selections. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Selections';
+            }
+        }
+
+        function showSuccess() {
+            document.getElementById('introText').classList.add('hidden');
+            document.getElementById('formContainer').classList.add('hidden');
+            document.getElementById('successMessage').classList.add('show');
+        }
+    </script>
+</body>
+</html>
